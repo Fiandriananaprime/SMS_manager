@@ -1,0 +1,63 @@
+<?xml version="1.0" encoding="utf-8"?>
+<manifest xmlns:android="http://schemas.android.com/apk/res/android">
+
+    <!-- Envoi des SMS via la SIM (permission "dangereuse", demandée au runtime) -->
+    <uses-permission android:name="android.permission.SEND_SMS" />
+    <!-- Lister les SIM (SubscriptionManager) et lire l'état SIM/réseau -->
+    <uses-permission android:name="android.permission.READ_PHONE_STATE" />
+    <!-- Lire le numéro de la SIM quand l'opérateur l'a enregistré (optionnel, informatif) -->
+    <uses-permission android:name="android.permission.READ_PHONE_NUMBERS" />
+    <!-- Uniquement pour ouvrir un socket serveur sur 127.0.0.1 (l'app ne se connecte à aucun serveur) -->
+    <uses-permission android:name="android.permission.INTERNET" />
+    <uses-permission android:name="android.permission.FOREGROUND_SERVICE" />
+    <uses-permission android:name="android.permission.FOREGROUND_SERVICE_SPECIAL_USE" />
+    <uses-permission android:name="android.permission.POST_NOTIFICATIONS" />
+    <uses-permission android:name="android.permission.WAKE_LOCK" />
+    <uses-permission android:name="android.permission.RECEIVE_BOOT_COMPLETED" />
+
+    <uses-feature
+        android:name="android.hardware.telephony"
+        android:required="true" />
+
+    <application
+        android:name=".App"
+        android:allowBackup="false"
+        android:label="@string/app_name"
+        android:theme="@style/Theme.SmsGateway"
+        android:usesCleartextTraffic="false">
+
+        <activity
+            android:name=".ui.MainActivity"
+            android:exported="true"
+            android:launchMode="singleTop">
+            <intent-filter>
+                <action android:name="android.intent.action.MAIN" />
+                <category android:name="android.intent.category.LAUNCHER" />
+            </intent-filter>
+        </activity>
+
+        <service
+            android:name=".service.GatewayService"
+            android:exported="false"
+            android:foregroundServiceType="specialUse">
+            <property
+                android:name="android.app.PROPERTY_SPECIAL_USE_FGS_SUBTYPE"
+                android:value="Local SMS gateway: loopback HTTP server and SMS queue worker" />
+        </service>
+
+        <receiver
+            android:name=".sms.SmsResultReceiver"
+            android:exported="false" />
+        <receiver
+            android:name=".sms.CampaignAlarmReceiver"
+            android:exported="false" />
+        <receiver
+            android:name=".sms.CampaignBootReceiver"
+            android:enabled="true"
+            android:exported="false">
+            <intent-filter>
+                <action android:name="android.intent.action.BOOT_COMPLETED" />
+            </intent-filter>
+        </receiver>
+    </application>
+</manifest>

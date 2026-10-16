@@ -1,0 +1,26 @@
+# Gradle / Android build output
+.gradle/
+**/build/
+local.properties
+*.apk
+*.aab
+app/release/
+
+# Android Studio / IntelliJ
+.idea/
+*.iml
+.kotlin/
+
+# Python client
+__pycache__/
+*.py[cod]
+.venv/
+venv/
+env/
+
+# Local environment and editor files
+.env
+.env.*
+!.env.example
+.DS_Store
+Thumbs.db
